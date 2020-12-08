@@ -515,7 +515,7 @@ def main():
     )
 
     group = parser.add_argument_group('general options')
-    group.add_argument('--outdir', help='Where to save the results (required)', required=True, metavar='DIR')
+    group.add_argument('--outdir', help='Where to save the results (required)', default = "/opt/trainml/output", required=True, metavar='DIR')
     group.add_argument('--gpus', help='Number of GPUs to use (default: 1 gpu)', type=int, metavar='INT')
     group.add_argument('--snap', help='Snapshot interval (default: 50 ticks)', type=int, metavar='INT')
     group.add_argument('--seed', help='Random seed (default: %(default)s)', type=int, default=1000, metavar='INT')
@@ -551,11 +551,8 @@ def main():
 
     args = parser.parse_args()
 
-    # dt.create_from_images("training_data", args.data, 1)
-    # args.data = "training_data"
-
-    dt.create_from_images("/opt/trainml/output", args.data, 1)
-    args.data = "/opt/trainml/output"
+    dt.create_from_images("training_data", args.data, 1)
+    args.data = "training_data"
 
     try:
         run_training(**vars(args))
