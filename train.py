@@ -533,7 +533,7 @@ def main():
     group = parser.add_argument_group('base config')
     group.add_argument('--cfg',   help='Base config (default: auto)', choices=['auto', 'stylegan2', 'paper256', 'paper512', 'paper1024', 'cifar', 'cifarbaseline'])
     group.add_argument('--gamma', help='Override R1 gamma', type=float, metavar='FLOAT')
-    group.add_argument('--kimg',  help='Override training duration', type=int, metavar='INT')
+    group.add_argument('--kimg', default = 1, help='Override training duration', type=int, metavar='INT')
 
     group = parser.add_argument_group('discriminator augmentation')
     group.add_argument('--aug',    help='Augmentation mode (default: ada)', choices=['noaug', 'ada', 'fixed', 'adarv'])
@@ -570,4 +570,5 @@ if __name__ == "__main__":
 #----------------------------------------------------------------------------
 # The training command should look like this now
 # python train.py --outdir /path/to/where/the/artifacts/s3/bucket/mounts --data /path/to/where/the/data/s3/bucket/mounts
+# python train.py --outdir ./output --data /opt/trainml/input
 #----------------------------------------------------------------------------
