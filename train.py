@@ -566,3 +566,8 @@ if __name__ == "__main__":
     main()
 
 #----------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------
+# The training command should look like this now
+# python train.py --outdir /path/to/where/the/artifacts/s3/bucket/mounts --data /path/to/where/the/data/s3/bucket/mounts
+#----------------------------------------------------------------------------
