@@ -551,8 +551,11 @@ def main():
 
     args = parser.parse_args()
 
-    dt.create_from_images("training_data", args.data, 1)
-    args.data = "training_data"
+    # dt.create_from_images("training_data", args.data, 1)
+    # args.data = "training_data"
+
+    dt.create_from_images("/opt/trainml/output", args.data, 1)
+    args.data = "/opt/trainml/output"
 
     try:
         run_training(**vars(args))
