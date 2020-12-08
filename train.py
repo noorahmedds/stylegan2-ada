@@ -505,6 +505,7 @@ transfer learning source networks (--resume):
 '''
 
 #----------------------------------------------------------------------------
+import dataset_tool as dt
 
 def main():
     parser = argparse.ArgumentParser(
@@ -549,6 +550,10 @@ def main():
     group.add_argument('--freezed', help='Freeze-D (default: 0 discriminator layers)', type=int, metavar='INT')
 
     args = parser.parse_args()
+
+    dt.create_from_images("training_data", args.data, 1)
+    args.data = "training_data"
+
     try:
         run_training(**vars(args))
     except UserError as err:
