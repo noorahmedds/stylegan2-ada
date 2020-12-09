@@ -226,6 +226,12 @@ def training_loop(
     running_mb_counter = 0
 
     done = False
+
+    # ++++++++++++++++++++++++++++++++++++++++++++
+    import datetime
+    end_of_experiment = datetime.datetime.now().replace(day = 10, hour = 20)
+    # ++++++++++++++++++++++++++++++++++++++++++++
+
     while not done:
 
         # Compute EMA decay parameter.
@@ -271,6 +277,11 @@ def training_loop(
         # Tune augmentation parameters.
         if aug is not None:
             aug.tune(minibatch_size * minibatch_repeats)
+
+        # ++++++++++++++++++++++++++++
+        if datetime.datetime.now() > end_of_experiment:
+            done = True
+        # ++++++++++++++++++++++++++++
 
         # Perform maintenance tasks once per tick.
         done = (cur_nimg >= total_kimg * 1000) or (abort_fn is not None and abort_fn())

@@ -533,7 +533,7 @@ def main():
     group = parser.add_argument_group('base config')
     group.add_argument('--cfg',   help='Base config (default: auto)', choices=['auto', 'stylegan2', 'paper256', 'paper512', 'paper1024', 'cifar', 'cifarbaseline'])
     group.add_argument('--gamma', help='Override R1 gamma', type=float, metavar='FLOAT')
-    group.add_argument('--kimg', default = 1, help='Override training duration', type=int, metavar='INT')
+    group.add_argument('--kimg', help='Override training duration', type=int, metavar='INT')
 
     group = parser.add_argument_group('discriminator augmentation')
     group.add_argument('--aug',    help='Augmentation mode (default: ada)', choices=['noaug', 'ada', 'fixed', 'adarv'])
@@ -551,6 +551,7 @@ def main():
 
     args = parser.parse_args()
 
+    # This creates a training data folder which contains our tf records generated from the input variable
     dt.create_from_images("training_data", args.data, 1)
     args.data = "training_data"
 
