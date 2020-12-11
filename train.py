@@ -521,7 +521,60 @@ def inference_after_training(run_dir, outdir):
     # save in args.outdir
     generate_images(network_pkl, seeds, truncation_psi, outdir, class_idx, dlatents_npz)
 
+from PIL import Image
+import cv2
+import numpy as np
 
+def letterbox_image(image, size):
+    '''resize image with unchanged aspect ratio using padding'''
+    iw, ih = image.shape[0:2][::-1]
+    w, h = size
+    scale = min(w/iw, h/ih)
+    nw = int(iw*scale)
+    nh = int(ih*scale)
+    image = cv2.resize(image, (nw,nh), interpolation=cv2.INTER_CUBIC)
+    new_image = np.zeros((size[1], size[0], 3), np.uint8)
+    new_image.fill(0)
+    dx = (w-nw)//2
+    dy = (h-nh)//2
+    new_image[dy:dy+nh, dx:dx+nw,:] = image
+    return new_image
+
+
+def get_average_dim(img_dir):
+    dirs = os.listdir(img_dir)
+    average_width = 0
+    average_height = 0
+    
+    for item in dirs:
+        img_path = os.path.join(img_dir, item)
+        if os.path.isfile(img_path):
+            im = Image.open(img_path)
+            width, height = im.size
+
+            average_height += height
+            average_width += width
+
+    average_width /= len(dirs)
+    average_height /= len(dirs)
+
+    return int(min(average_width, average_height))
+
+def resize_to_average_dim(img_dir):
+    new_dim = get_average_dim(img_dir)
+
+    dirs = os.listdir(img_dir)
+    for item in dirs:
+        img_path = os.path.join(img_dir, item)
+        if os.path.isfile(img_path):
+            img = cv2.imread(img_path)
+            H, W, _ = img.shape
+
+            if not (H == new_dim and W == new_dim):
+                img = letterbox_image(img, (new_dim, new_dim))
+
+            cv2.imwrite(img_path, img)
+            
 def main():
     parser = argparse.ArgumentParser(
         description='Train a GAN using the techniques described in the paper\n"Training Generative Adversarial Networks with Limited Data".',
@@ -565,6 +618,8 @@ def main():
     group.add_argument('--freezed', help='Freeze-D (default: 0 discriminator layers)', type=int, metavar='INT')
 
     args = parser.parse_args()
+
+    resize_to_average_dim(args.data)
 
     # This creates a training data folder which contains our tf records generated from the input variable
     dt.create_from_images("training_data", args.data, 1)
