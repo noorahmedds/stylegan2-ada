@@ -227,10 +227,10 @@ def training_loop(
 
     done = False
 
-    # ++++++++++++++++++++++++++++++++++++++++++++
-    import datetime
-    end_of_experiment = datetime.datetime.now().replace(day = 10, hour = 20)
-    # ++++++++++++++++++++++++++++++++++++++++++++
+    # # ++++++++++++++++++++++++++++++++++++++++++++
+    # import datetime
+    # end_of_experiment = datetime.datetime.now().replace(day = 10, hour = 20)
+    # # ++++++++++++++++++++++++++++++++++++++++++++
 
     while not done:
 
@@ -278,13 +278,14 @@ def training_loop(
         if aug is not None:
             aug.tune(minibatch_size * minibatch_repeats)
 
-        # ++++++++++++++++++++++++++++
-        if datetime.datetime.now() > end_of_experiment:
-            done = True
-        # ++++++++++++++++++++++++++++
-
         # Perform maintenance tasks once per tick.
         done = (cur_nimg >= total_kimg * 1000) or (abort_fn is not None and abort_fn())
+                
+        # # ----------------------------
+        # if datetime.datetime.now() > end_of_experiment:
+        #     done = True
+        # # ----------------------------
+
         if done or cur_tick < 0 or cur_nimg >= tick_start_nimg + kimg_per_tick * 1000:
             cur_tick += 1
             tick_kimg = (cur_nimg - tick_start_nimg) / 1000.0
@@ -314,7 +315,8 @@ def training_loop(
                 grid_fakes = Gs.run(grid_latents, grid_labels, is_validation=True, minibatch_size=minibatch_gpu)
                 save_image_grid(grid_fakes, os.path.join(run_dir, f'fakes{cur_nimg // 1000:06d}.png'), drange=[-1,1], grid_size=grid_size)
             if network_snapshot_ticks is not None and (done or cur_tick % network_snapshot_ticks == 0):
-                pkl = os.path.join(run_dir, f'network-snapshot-{cur_nimg // 1000:06d}.pkl')
+                # pkl = os.path.join(run_dir, f'network-snapshot-{cur_nimg // 1000:06d}.pkl')
+                pkl = os.path.join(run_dir, f'network-snapshot-best.pkl')
                 with open(pkl, 'wb') as f:
                     pickle.dump((G, D, Gs), f)
                 if len(metrics):

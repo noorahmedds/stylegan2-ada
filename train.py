@@ -506,6 +506,21 @@ transfer learning source networks (--resume):
 
 #----------------------------------------------------------------------------
 import dataset_tool as dt
+from generate import *
+
+def inference_after_training(outdir):
+    network_pkl = os.path.join(outdir, 'network-snapshot-best.pkl')
+    seeds = list(range(50))
+    truncation_psi = 0.7
+    class_idx = None
+    dlatents_npz = None
+
+    # Inference for 2500 images and save to outdir
+    # save in args.outdir
+    generate_images(network_pkl, seeds, truncation_psi, outdir, class_idx, dlatents_npz)
+
+
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -557,7 +572,10 @@ def main():
 
     try:
         run_training(**vars(args))
+        inference_after_training(args.outdir)
+        
     except UserError as err:
+
         print(f'Error: {err}')
         exit(1)
 
