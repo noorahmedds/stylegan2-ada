@@ -422,8 +422,7 @@ def run_training(outdir, seed, dry_run, **hyperparam_options):
     prev_run_ids = [re.match(r'^\d+', x) for x in prev_run_dirs]
     prev_run_ids = [int(x.group()) for x in prev_run_ids if x is not None]
     cur_run_id = max(prev_run_ids, default=-1) + 1
-    # training_options.run_dir = os.path.join(outdir, f'{cur_run_id:05d}-{run_desc}')
-    training_options.run_dir = outdir
+    training_options.run_dir = os.path.join(outdir, f'{cur_run_id:05d}-{run_desc}')
     assert not os.path.exists(training_options.run_dir)
 
     # Print options.
@@ -450,6 +449,8 @@ def run_training(outdir, seed, dry_run, **hyperparam_options):
         json.dump(training_options, f, indent=2)
     with dnnlib.util.Logger(os.path.join(training_options.run_dir, 'log.txt')):
         training_loop.training_loop(**training_options)
+
+    inference_after_training(training_options.run_dir, outdir)
 
 #----------------------------------------------------------------------------
 
@@ -509,8 +510,8 @@ transfer learning source networks (--resume):
 import dataset_tool as dt
 from generate import generate_images
 
-def inference_after_training(outdir):
-    network_pkl = os.path.join(outdir, 'network-snapshot-best.pkl')
+def inference_after_training(run_dir, outdir):
+    network_pkl = os.path.join(run_dir, 'network-snapshot-best.pkl')
     seeds = list(range(2500)) # Will create 2500 images
     truncation_psi = 0.7 # Higher trucncation value will produce realistic results
     class_idx = None
@@ -571,7 +572,6 @@ def main():
 
     try:
         run_training(**vars(args))
-        inference_after_training(args.outdir)
 
     except UserError as err:
 
