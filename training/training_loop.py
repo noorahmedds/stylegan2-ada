@@ -286,6 +286,9 @@ def training_loop(
         #     done = True
         # # ----------------------------
 
+        if cur_tick >= 2:
+            done = True
+
         if done or cur_tick < 0 or cur_nimg >= tick_start_nimg + kimg_per_tick * 1000:
             cur_tick += 1
             tick_kimg = (cur_nimg - tick_start_nimg) / 1000.0

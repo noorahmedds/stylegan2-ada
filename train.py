@@ -422,7 +422,8 @@ def run_training(outdir, seed, dry_run, **hyperparam_options):
     prev_run_ids = [re.match(r'^\d+', x) for x in prev_run_dirs]
     prev_run_ids = [int(x.group()) for x in prev_run_ids if x is not None]
     cur_run_id = max(prev_run_ids, default=-1) + 1
-    training_options.run_dir = os.path.join(outdir, f'{cur_run_id:05d}-{run_desc}')
+    # training_options.run_dir = os.path.join(outdir, f'{cur_run_id:05d}-{run_desc}')
+    training_options.run_dir = outdir
     assert not os.path.exists(training_options.run_dir)
 
     # Print options.
@@ -506,20 +507,18 @@ transfer learning source networks (--resume):
 
 #----------------------------------------------------------------------------
 import dataset_tool as dt
-from generate import *
+from generate import generate_images
 
 def inference_after_training(outdir):
     network_pkl = os.path.join(outdir, 'network-snapshot-best.pkl')
-    seeds = list(range(50))
-    truncation_psi = 0.7
+    seeds = list(range(2500)) # Will create 2500 images
+    truncation_psi = 0.7 # Higher trucncation value will produce realistic results
     class_idx = None
     dlatents_npz = None
 
     # Inference for 2500 images and save to outdir
     # save in args.outdir
     generate_images(network_pkl, seeds, truncation_psi, outdir, class_idx, dlatents_npz)
-
-
 
 
 def main():
@@ -573,7 +572,7 @@ def main():
     try:
         run_training(**vars(args))
         inference_after_training(args.outdir)
-        
+
     except UserError as err:
 
         print(f'Error: {err}')
