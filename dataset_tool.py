@@ -667,6 +667,10 @@ def create_from_images(tfrecord_dir, image_dir, shuffle):
 
     img = np.asarray(PIL.Image.open(image_filenames[0]))
     resolution = img.shape[0]
+
+
+    print(f"{image_filenames[0]} ... {img.shape}")
+    
     channels = img.shape[2] if img.ndim == 3 else 1
     if img.shape[1] != resolution:
         error('Input images must have the same width and height')

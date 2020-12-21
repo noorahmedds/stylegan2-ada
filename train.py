@@ -571,7 +571,13 @@ def resize_to_average_dim(img_dir):
             print("Original shape: ", img.shape)    
             H, W, _ = img.shape
 
-            if not (H == new_dim and W == new_dim):
+            # new_dim = 10
+            # H = 20
+            # W = 20
+
+            if (H == new_dim and W == new_dim):
+                pass
+            else:
                 img = letterbox_image(img, (new_dim, new_dim))
                 print("Letterbox shape: ", img.shape)
 
