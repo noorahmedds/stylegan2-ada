@@ -568,10 +568,12 @@ def resize_to_average_dim(img_dir):
         img_path = os.path.join(img_dir, item)
         if os.path.isfile(img_path):
             img = cv2.imread(img_path)
+            print("Original shape: ", img.shape)    
             H, W, _ = img.shape
 
             if not (H == new_dim and W == new_dim):
                 img = letterbox_image(img, (new_dim, new_dim))
+                print("Letterbox shape: ", img.shape)
 
             cv2.imwrite(img_path, img)
             
