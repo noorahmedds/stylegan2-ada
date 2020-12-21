@@ -565,7 +565,8 @@ def resize_to_average_dim(img_dir, outdir):
 
     dirs = os.listdir(img_dir)
     for item in dirs:
-        img_path = os.path.join(outdir, item)
+        img_path = os.path.join(img_dir, item)
+        out_img_path = os.path.join(outdir, item)
         if os.path.isfile(img_path):
             img = cv2.imread(img_path)
             # print("Original shape: ", img.shape)    
@@ -577,8 +578,8 @@ def resize_to_average_dim(img_dir, outdir):
                 img = letterbox_image(img, (new_dim, new_dim))
                 # print("Letterbox shape: ", img.shape)
 
-            print("Main print:", img_path)
-            cv2.imwrite(img_path, img)
+            print("Main print:", out_img_path)
+            cv2.imwrite(out_img_path, img)
             
 def main():
     parser = argparse.ArgumentParser(
