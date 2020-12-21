@@ -560,8 +560,17 @@ def get_average_dim(img_dir):
 
     return int(min(average_width, average_height))
 
+def closest_power_of_2(x):  
+    dist_2_before = abs(x - 2**((x - 1).bit_length() - 1))
+    dist_2_next = abs(x - 2**((x - 1).bit_length()))
+    if dist_2_before > dist_2_next:
+        return 2**((x - 1).bit_length())
+    else:
+        return 2**((x - 1).bit_length() - 1)
+
 def resize_to_average_dim(img_dir, outdir):
     new_dim = get_average_dim(img_dir)
+    new_dim = closest_power_of_2(new_dim)
 
     dirs = os.listdir(img_dir)
     for item in dirs:
