@@ -560,27 +560,24 @@ def get_average_dim(img_dir):
 
     return int(min(average_width, average_height))
 
-def resize_to_average_dim(img_dir):
+def resize_to_average_dim(img_dir, outdir):
     new_dim = get_average_dim(img_dir)
 
     dirs = os.listdir(img_dir)
     for item in dirs:
-        img_path = os.path.join(img_dir, item)
+        img_path = os.path.join(outdir, item)
         if os.path.isfile(img_path):
             img = cv2.imread(img_path)
-            print("Original shape: ", img.shape)    
+            # print("Original shape: ", img.shape)    
             H, W, _ = img.shape
-
-            # new_dim = 10
-            # H = 20
-            # W = 20
 
             if (H == new_dim and W == new_dim):
                 pass
             else:
                 img = letterbox_image(img, (new_dim, new_dim))
-                print("Letterbox shape: ", img.shape)
+                # print("Letterbox shape: ", img.shape)
 
+            print("Main print:", img_path)
             cv2.imwrite(img_path, img)
             
 def main():
@@ -627,11 +624,17 @@ def main():
 
     args = parser.parse_args()
 
-    resize_to_average_dim(args.data)
+    resized_dir = "resized_images"
+    if not os.path.exists(resized_dir):
+        os.mkdir(resized_dir)
+
+    print(args.data)
+    resize_to_average_dim(args.data, resized_dir)
 
     # This creates a training data folder which contains our tf records generated from the input variable
-    dt.create_from_images("training_data", args.data, 1)
+    dt.create_from_images("training_data", resized_dir, 1)
     args.data = "training_data"
+
 
     try:
         run_training(**vars(args))

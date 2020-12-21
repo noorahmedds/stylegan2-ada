@@ -662,6 +662,8 @@ def create_from_images(tfrecord_dir, image_dir, shuffle):
     image_filenames += sorted(glob.glob(os.path.join(image_dir, "*.png")))
     image_filenames += sorted(glob.glob(os.path.join(image_dir, "*.jpeg")))
 
+    print(image_dir)
+
     if len(image_filenames) == 0:
         error('No input images found')
 
@@ -670,7 +672,7 @@ def create_from_images(tfrecord_dir, image_dir, shuffle):
 
 
     print(f"{image_filenames[0]} ... {img.shape}")
-    
+
     channels = img.shape[2] if img.ndim == 3 else 1
     if img.shape[1] != resolution:
         error('Input images must have the same width and height')
