@@ -21,6 +21,8 @@ from training import training_loop
 from training import dataset
 from metrics import metric_defaults
 
+from training.dataset import IMAGE_EXTENSIONS
+
 #----------------------------------------------------------------------------
 
 class UserError(Exception):
@@ -547,7 +549,12 @@ def get_average_dim(img_dir):
     average_height = 0
     
     for item in dirs:
+        ext = item.split(".")[-1]
+        if ext not in IMAGE_EXTENSIONS:
+            continue
+
         img_path = os.path.join(img_dir, item)
+        
         if os.path.isfile(img_path):
             im = Image.open(img_path)
             width, height = im.size
@@ -574,6 +581,11 @@ def resize_to_average_dim(img_dir, outdir):
 
     dirs = os.listdir(img_dir)
     for item in dirs:
+        ext = item.split(".")[-1]
+
+        if ext not in IMAGE_EXTENSIONS:
+            continue
+
         img_path = os.path.join(img_dir, item)
         out_img_path = os.path.join(outdir, item)
         if os.path.isfile(img_path):
