@@ -28,9 +28,9 @@ from tqdm import tqdm
 from training import dataset
 
 IMAGE_EXTENSIONS = set([
-    '.jpeg',
-    '.jpg',
-    '.png',
+    'jpeg',
+    'jpg',
+    'png',
 ])
 
 #----------------------------------------------------------------------------

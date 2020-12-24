@@ -548,11 +548,13 @@ def get_average_dim(img_dir):
     average_width = 0
     average_height = 0
     
+    number_of_valid_items = 0
     for item in dirs:
         ext = item.split(".")[-1]
         if ext not in IMAGE_EXTENSIONS:
             continue
 
+        number_of_valid_items += 1
         img_path = os.path.join(img_dir, item)
 
         if os.path.isfile(img_path):
@@ -562,8 +564,8 @@ def get_average_dim(img_dir):
             average_height += height
             average_width += width
 
-    average_width /= len(dirs)
-    average_height /= len(dirs)
+    average_width /= number_of_valid_items
+    average_height /= number_of_valid_items
 
     return int(min(average_width, average_height))
 
