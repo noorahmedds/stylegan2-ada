@@ -21,7 +21,7 @@ from training import training_loop
 from training import dataset
 from metrics import metric_defaults
 
-from training.dataset import IMAGE_EXTENSIONS
+from dataset_tool import IMAGE_EXTENSIONS
 
 #----------------------------------------------------------------------------
 
@@ -554,7 +554,7 @@ def get_average_dim(img_dir):
             continue
 
         img_path = os.path.join(img_dir, item)
-        
+
         if os.path.isfile(img_path):
             im = Image.open(img_path)
             width, height = im.size
